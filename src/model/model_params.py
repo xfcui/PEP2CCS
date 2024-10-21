@@ -1,0 +1,12 @@
+model_params = {}
+model_params['embedding_size'] = 128
+model_params['num_layers'] = 6
+model_params['dropout'] = 0.2
+model_params['batch_size'] = 512
+model_params['learning_rate'] = 0.001
+model_params['epochs'] = 300
+model_params['reduce_lr_step'] = 200
+model_params['eval_interval'] = 10
+model_params['model_dir'] = "./"
+model_params['early_stop'] = 15
+model_params['num_heads'] = 8
