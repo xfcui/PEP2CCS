@@ -2,6 +2,11 @@
 ---
 The PEP2CCS is a deep learning model designed to predict CCS. This model integrates enhanced physical features of peptides, thereby improving the accuracy of CCS predictions. You can quickly get started with the PEP2CCS according to the following instructions.
 
+```
+Authors: Zhimeng Tian, Zizheng Nie, Yong Zhang, Daming Zhu and Xuefeng Cui*
+Contact: xfcui@email.sdu.edu.cna
+```
+
 ## Installation
 ---
 Create virtual environment and install packages:
@@ -60,7 +65,3 @@ chmod +x run_prediction.sh
 ./run_prediction.sh /path/to/test.csv
 ```
 
-```
-Authors: Zhimeng Tian, Zizheng Nie, Yong Zhang, Daming Zhu and Xuefeng Cui*
-Contact: xfcui@email.sdu.edu.cna
-```
