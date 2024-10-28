@@ -1,6 +1,4 @@
 # PEP2CCS
-## Introduction
----
 The PEP2CCS is a deep learning model designed to predict CCS. This model integrates enhanced physical features of peptides, thereby improving the accuracy of CCS predictions. You can quickly get started with the PEP2CCS according to the following instructions.
 
 ```
