@@ -24,7 +24,6 @@ git clone https://github.com/xfcui/PEP2CCS.git
 ```
 
 ### Usage
----
 If you want to run our model on your own data, you need to provide the file.
 
 #### Data preparation
