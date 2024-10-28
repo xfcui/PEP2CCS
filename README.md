@@ -21,13 +21,13 @@ Clone this repository by:
 git clone https://github.com/xfcui/PEP2CCS.git
 ```
 
-### Usage
+## Usage
 If you want to run our model on your own data, you need to provide the file.
 
-#### Data preparation
+### Data preparation
 After creating a virtual environment, you need to prepare data and trained model. We provide a sample data in the data directory. We also provide the trained model under the checkpoint/model.pt.
 
-#### Predict peptide ccs
+### Predict peptide ccs
 ```bash
 chmod +x run_prediction.sh
 ./run_prediction.sh /path/to/test.csv
