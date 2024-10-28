@@ -4,7 +4,8 @@ The PEP2CCS is a deep learning model designed to predict CCS. This model integra
 
 ```
 Authors: Zhimeng Tian, Zizheng Nie, Yong Zhang, Daming Zhu and Xuefeng Cui*
-Contact: xfcui@email.sdu.edu.cna
+    - *: To whom correspondence should be addressed.
+Contact: xfcui@email.sdu.edu.cn
 ```
 
 ## Installation
