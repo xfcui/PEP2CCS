@@ -35,7 +35,7 @@ chmod +x run_prediction.sh
 ./run_prediction.sh /path/to/test.csv
 ```
 
-## Reproduction experiments
+## Reproduction of the original experiment
 ---
 ### Exp1: Performance of PEP2CCS
 ```bash
