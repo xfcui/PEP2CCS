@@ -8,7 +8,6 @@ Contact: xfcui@email.sdu.edu.cn
 ```
 
 ## Installation
----
 Create virtual environment and install packages:
 ```bash
 chmod +x run_setup.sh
@@ -16,7 +15,6 @@ bash ./run_setup.sh
 ```
 
 ## Quick start
----
 ### Get clone
 Clone this repository by:
 ```
@@ -36,7 +34,6 @@ chmod +x run_prediction.sh
 ```
 
 ## Reproduction of the original experiments
----
 ### Exp1: Performance of PEP2CCS
 ```bash
 chmod +x /root/PEP2CCS/src/Exp1/run.sh
