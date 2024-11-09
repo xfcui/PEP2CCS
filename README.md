@@ -32,6 +32,10 @@ After creating a virtual environment, you need to prepare data and trained model
 chmod +x run_prediction.sh
 ./run_prediction.sh /path/to/test.csv
 ```
+```
+# The test code is as follows:
+python predict.py /root/PEP2CCS/data/test_data.csv
+```
 
 ## Reproduction of the original experiments
 ### Exp1: Performance of PEP2CCS
