@@ -30,7 +30,7 @@ After creating a virtual environment, you need to prepare data and trained model
 ### Predict peptide ccs
 ```bash
 chmod +x run_prediction.sh
-./run_prediction.sh /path/to/test.csv
+./run_prediction.sh /path_to_test.csv
 ```
 ```
 # The test code is as follows:
