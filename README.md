@@ -34,6 +34,7 @@ bash ./run_prediction.sh /path_to_test.csv
 ```
 ```
 # The test code is as follows:
+chmod +x run_prediction.sh
 bash ./run_prediction.sh /root/PEP2CCS/data/test_data.csv
 ```
 
