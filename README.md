@@ -30,11 +30,11 @@ After creating a virtual environment, you need to prepare data and trained model
 ### Predict peptide ccs
 ```bash
 chmod +x run_prediction.sh
-bash ./run_prediction.sh -- data_paht /path_to_test.csv
+bash ./run_prediction.sh /path_to_test.csv
 ```
 ```
 # The test code is as follows:
-bash ./run_prediction.sh -- data_paht /root/PEP2CCS/data/test_data.csv
+bash ./run_prediction.sh /root/PEP2CCS/data/test_data.csv
 ```
 
 ## Reproduction of the original experiments
