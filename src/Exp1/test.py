@@ -1,35 +1,41 @@
+import sys
+import os
+
+sys.path.append('./src/')
+
 import pandas as pd
 import torch
-from PEP2CCS.src.Exp1.data_util import *
-from PEP2CCS.src.model.model import *
-from PEP2CCS.src.model.model_params import *
+from data_util import *
+from model.model import *
+from model.model_params import * 
 from torch.utils.data import DataLoader
-import os
 import time
 from tqdm import tqdm
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 
-
-
 def main():
     print("##model params: {}", model_params)
-    data = pd.read_csv('/root/PEP2CCS/data/test_data.csv')    
+    batch_size = 1
+    data = pd.read_csv('./src/data/test_data.csv')    
     
     data_set = get_test_data_set()
     test_dataloader = DataLoader(data_set, batch_size = batch_size, shuffle = False)
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    device = torch.device('cuda:1' if torch.cuda.is_available() else 'cpu')
     print('device: ', device)
     
     model = PEP2CCS(model_params['num_layers'], model_params['embedding_size'], model_params['num_heads'], 0, 0).to(device)
-    model_path = "/root/PEP2CCS/checkpoint/model.pt"
-    chkp = torch.load(model_path)
+    model_path = "./src/checkpoint/model.pt"
+    # chkp = torch.load(model_path)
+
+    chkp = torch.load(model_path, map_location=device)
+
     state_dict = chkp['model_param']
     model.load_state_dict(state_dict)
     
     max_len = 64
-    batch_size = 1
+
     test_size = len(data_set)
     pred_ccs = np.zeros([test_size, 1])
     ccs = np.zeros([test_size, 1])
@@ -129,9 +135,15 @@ def main():
 
     axs[2].text(0.95, 0.95, 'MAPE(%): 1.139%', horizontalalignment='right', verticalalignment='top', transform=axs[2].transAxes, fontsize=26, fontweight='bold')
 
-    plt.tight_layout()
-    plt.show()
+    output_dir = "./src/Exp1/"
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
 
-    
-if __name__ == 'main':
+    fig_filename = os.path.join(output_dir, "ccs_vs_mz_plots.png")
+    plt.tight_layout()
+    plt.savefig(fig_filename)
+    print(f"Plots saved to {fig_filename}")
+    plt.close(fig)
+
+if __name__ == '__main__':
     main()
