@@ -43,7 +43,7 @@ class Regression(nn.Module):
         
 class PEP2CCS(nn.Module):
     def __init__(self, num_layers, embedding_size, dropout, max_len = 64):
-        super().__init__()
+        super(PEP2CCS, self).__init__()
         self.max_len = max_len
         self.Embedding = Embedding(embedding_size)
         self.Encoder = EncoderLayer(num_layers, embedding_size, dropout)
