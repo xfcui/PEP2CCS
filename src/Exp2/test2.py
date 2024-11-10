@@ -1,10 +1,14 @@
+import sys
+import os
+
+sys.path.append('./src/')
+
 import pandas as pd
 import torch
 from data_util import *
 from LSTM import *
-from PEP2CCS.src.model.model_params import *
+from model_params import * 
 from torch.utils.data import DataLoader
-import os
 import time
 from tqdm import tqdm
 import matplotlib.pyplot as plt
@@ -14,12 +18,15 @@ import argparse
 
 def main():
     parser = argparse.ArgumentParser(description="Run the PEP2CCS model with custom model path and data selection.")
-    parser.add_argument('--model_path', type=str, default="/root/PEP2CCS/src/Exp2/LSTM.pt", help='Path to the model checkpoint')
+    parser.add_argument('--model_path', type=str, default="/root/PEP2CCS/src/Exp2/model1.pt", help='Path to the model checkpoint')
     parser.add_argument('--use_full_data', type=int, default=1, help='Use full data (1) or partial data (0)')
     args = parser.parse_args()
+
+    
+    use_full_data = args.use_full_data
     
     print("##model params: {}", model_params)
-    data = pd.read_csv('/root/ttest.csv')    
+    data = pd.read_csv('./src/data/test_data.csv')    
     
     if args.use_full_data == 1:
         data_set = get_test_data_set()
@@ -28,31 +35,43 @@ def main():
         data_set = get_partial_test_data_set()
         print("Using partial test data set.")
     
-    test_dataloader = DataLoader(data_set, batch_size=batch_size, shuffle=False)
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    print('device: ', device)
-        
-    model = PEP2CCS(model_params['num_layers'], model_params['embedding_size'], 0).to(device)
-    model_path = args.model_path
-    chkp = torch.load(model_path)
-    state_dict = chkp['model_param']
-    model.load_state_dict(state_dict)
-    
-    max_len = 64
     batch_size = 1
+
+    test_dataloader = DataLoader(data_set, batch_size=batch_size, shuffle=False)
+    
+    device = torch.device('cuda:2' if torch.cuda.is_available() else 'cpu')
+    print('device: ', device)
+
+    model = PEP2CCS(model_params['num_layers'], model_params['embedding_size'], 0).to(device)
+    try:
+        chkp = torch.load(args.model_path, map_location = device)
+        state_dict = chkp['model_param']
+        model.load_state_dict(state_dict)
+    except Exception as e:
+        print(f"Error loading model: {e}")
+        return
+
+    # 初始化一些变量
+    max_len = 64
     test_size = len(data_set)
     pred_ccs = np.zeros([test_size, 1])
     ccs = np.zeros([test_size, 1])
     charge = np.zeros([test_size, 1])
     seq = np.zeros([test_size, max_len])
+    Length = np.zeros([test_size, max_len])
+    max_pos = np.zeros([test_size, max_len])
     i = 0
-    start = time.time()
+
+    # 测试模式
     model.eval()
     loss_op = nn.MSELoss()
     test_loss = []
+
+    # 记录时间
+    start = time.time()
     test_dataloader = tqdm(test_dataloader, total=len(test_dataloader), desc="Model on test set", unit='batch')
 
-    for batch_seq, batch_ccs, batch_charge, batch_length in test_dataloader:
+    for batch_seq, batch_ccs, batch_charge, batch_length, batch_mz, batch_ccs2 in test_dataloader:
         with torch.no_grad():
             batch_seq = batch_seq.to(device)
             batch_ccs = batch_ccs.to(device)
@@ -70,24 +89,28 @@ def main():
             seq[i:i + batch_size, :] = batch_seq.cpu().numpy().reshape(-1, max_len)
 
             i = i + 1
+
     avr_loss = sum(test_loss) / len(test_loss)
     print("##Finish!")
     print(f'##Time: {(time.time() - start) / 60}')
     print(f'##Test Loss: {avr_loss}')
-    
-    
+
     pred_ccs = pred_ccs.ravel()
     data['Pred CCS'] = pred_ccs
-    
     df = data
     df['Relative deviation'] = (df['CCS'] / df['Pred CCS']) * 100 - 100
     df['Abusolute error'] = np.abs(df['CCS'] - df['Pred CCS'])
+    
     max_rel = max(df['Relative deviation']) 
     max_abs = max(df['Abusolute error'])
     print(f'max_Rel: {max_rel}, max_Abs: {max_abs}')
+    
     mse = ((df['CCS'] - df['Pred CCS']) ** 2).mean()
     print(f'MSE: {mse}')
-    print("Mediant Abusolute Relative Error: ", np.median(np.abs(df['Relative deviation'])))
+    print("Median Absolute Relative Error: ", np.median(np.abs(df['Relative deviation'])))
     
-if __name__ == 'main':
+    df['Error'] = (df['Relative deviation'])
+    df.to_csv('./src/Exp2/predictions_with_errors_LSTM_{}.csv'.format(use_full_data), index=False)
+
+if __name__ == '__main__':
     main()
