@@ -89,7 +89,7 @@ def sequence_to_vector(sequence):
 
 def charge_to_onehot(charge, num_classes=3):
     one_hot = np.zeros(num_classes, dtype=int)
-    one_hot[charge - 2] = 1  # 假设电荷状态为2, 3, 4，对应0, 1, 2索引
+    one_hot[charge - 2] = 1  
     return one_hot
 
 def get_data_set():
@@ -100,15 +100,12 @@ def get_data_set():
     train_seq = process_seq(train_data)
     valid_seq = process_seq(valid_data)
     
-    # 将sequence_to_vector应用于每个序列
     train_vector = np.array([sequence_to_vector(seq) for seq in train_data['Sequence']])
     valid_vector = np.array([sequence_to_vector(seq) for seq in valid_data['Sequence']])
     
-    # 将电荷状态转换为独热编码并拼接到vector后面
     train_onehot = np.array([charge_to_onehot(charge) for charge in train_data['Charge']])
     valid_onehot = np.array([charge_to_onehot(charge) for charge in valid_data['Charge']])
     
-    # 拼接电荷状态的独热编码到vector
     train_vector = np.hstack((train_vector, train_onehot))
     valid_vector = np.hstack((valid_vector, valid_onehot))
 
@@ -132,11 +129,10 @@ def get_data_set():
     return train_dataset, valid_dataset
 
 def get_test_data_set():
-    test_data = pd.read_csv('/root/ttest.csv')
+    test_data = pd.read_csv('./src/data/test_data.csv')
     test_seq = process_seq(test_data)
     test_vector = np.array([sequence_to_vector(seq) for seq in test_data['Sequence']])
     
-    # 将电荷状态转换为独热编码并拼接到vector后面
     test_onehot = np.array([charge_to_onehot(charge) for charge in test_data['Charge']])
     test_vector = np.hstack((test_vector, test_onehot))
 
