@@ -1,13 +1,13 @@
 #!/bin/bash
 
-echo "##Exp2: The function of charge state"
-python /root/PEP2CCS/src/Exp2/test1.py /root/PEP2CCS/checkpoint/model.pt 1
-python /root/PEP2CCS/src/Exp2/test1.py /root/PEP2CCS/src/Exp2/PEP2CCS.pt 1
-python /root/PEP2CCS/src/Exp2/test2.py /root/PEP2CCS/src/Exp2/LSTM.pt 1
+echo "##Exp2: The role of charge state"
+python ./src/Exp2/test1.py --model_path "./src/checkpoint/model.pt" --use_full_data 1
+python ./src/Exp2/test1.py --model_path "./src/Exp2/PEP2CCS.pt" --use_full_data 1
+python ./src/Exp2/test2.py --model_path "./src/Exp2/LSTM.pt" --use_full_data 1
 
 
-python /root/PEP2CCS/src/Exp2/test1.py /root/PEP2CCS/checkpoint/model.pt 0
-python /root/PEP2CCS/src/Exp2/test1.py /root/PEP2CCS/src/Exp2/PEP2CCS.pt 0
-python /root/PEP2CCS/src/Exp2/test2.py /root/PEP2CCS/src/Exp2/LSTM.pt 0
+python ./src/Exp2/test1.py --model_path "./src/checkpoint/model.pt" --use_full_data 0
+python ./src/Exp2/test1.py --model_path "./src/Exp2/PEP2CCS.pt" --use_full_data 0
+python ./src/Exp2/test2.py --model_path "./src/Exp2/LSTM.pt" --use_full_data 0
 
 echo "##Exp 2 replication completed!"
