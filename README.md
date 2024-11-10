@@ -12,6 +12,7 @@ Create virtual environment and install packages:
 ```bash
 chmod +x run_setup.sh
 bash ./run_setup.sh
+conda activate PEP2CCS
 ```
 
 ## Quick start
