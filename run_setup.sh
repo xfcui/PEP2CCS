@@ -1,17 +1,14 @@
 #!/bin/bash
 
-echo "Creating conda environment: PEP2CCS"
-conda create -n PEP2CCS -y
+ENV_NAME="PEP2CCS"
 
-echo "Activating PEP2CCS environment"
-conda activate PEP2CCS
+conda create -y -n $ENV_NAME python=3.9
 
-if [ -f "requirements.txt" ]; then
-    echo "Installing packages from requirements.txt"
-    pip install -r requirements.txt
-else
-    echo "requirements.txt not found! Please ensure the file is in the current directory."
-    exit 1
-fi
+source activate $ENV_NAME
 
-echo "Environment setup complete!"
+pip install -r requirements.txt
+
+echo "Installation is complete! The following libraries are installed in the environment $ENV_NAME:"
+pip list
+
+unzip ./src/data/test_data.zip -d ./src/data/
