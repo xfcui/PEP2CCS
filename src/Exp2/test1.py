@@ -39,12 +39,12 @@ def main():
 
     test_dataloader = DataLoader(data_set, batch_size=batch_size, shuffle=False)
     
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    device = torch.device('cuda:2' if torch.cuda.is_available() else 'cpu')
     print('device: ', device)
 
     model = PEP2CCS(model_params['num_layers'], model_params['embedding_size'], model_params['num_heads'], 0, 0).to(device)
     try:
-        chkp = torch.load(args.model_path)
+        chkp = torch.load(args.model_path, map_location = device)
         state_dict = chkp['model_param']
         model.load_state_dict(state_dict)
     except Exception as e:
@@ -93,7 +93,7 @@ def main():
             max_pos[i:i + batch_size, :] = idx.cpu().numpy().reshape(-1, 1)
             seq[i:i + batch_size, :] = batch_seq.cpu().numpy().reshape(-1, max_len)
             i += 1
-            
+
     avr_loss = sum(test_loss) / len(test_loss)
     print("##Finish!")
     print(f'##Time: {(time.time() - start) / 60}')
@@ -112,7 +112,7 @@ def main():
     mse = ((df['CCS'] - df['Pred CCS']) ** 2).mean()
     print(f'MSE: {mse}')
     print("Median Absolute Relative Error: ", np.median(np.abs(df['Relative deviation'])))
-
+    
     df['Error'] = (df['Relative deviation'])
     df.to_csv('predictions_with_errors.csv', index=False)
     df.to_csv('./src/Exp2/predictions_with_errors_PEP2CCS_{}.csv'.format(use_full_data), index=False)
