@@ -32,8 +32,8 @@ class polypeptide(Dataset):
     def __init__(self, seq, ccs, charge, length, mz, ccs2):
         self.seq = torch.LongTensor(seq.tolist())
         self.ccs = torch.FloatTensor(ccs)
-        self.charge = torch.LongTensor(charge)
-        self.length = torch.LongTensor(length)
+        self.charge = torch.FloatTensor(charge)
+        self.length = torch.FloatTensor(length)
         self.mz = torch.FloatTensor(mz)
         self.ccs2 = torch.FloatTensor(ccs2)
     
@@ -99,7 +99,7 @@ def get_data_set():
     return train_dataset, valid_dataset
 
 def get_test_data_set():
-    df = pd.read_csv('/root/PEP2CCS/data/test_data.csv')
+    df = pd.read_csv('./src/data/test_data.csv')
 
     test_data = df
     
