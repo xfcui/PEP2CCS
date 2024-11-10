@@ -41,31 +41,31 @@ bash ./run_prediction.sh ./src/data/test_data.csv
 ## Reproduction of the original experiments
 ### Exp1: Performance of PEP2CCS
 ```bash
-chmod +x /root/PEP2CCS/src/Exp1/run.sh
-bash /root/PEP2CCS/src/Exp1/run.sh
+chmod +x ./src/Exp1/run.sh
+bash ./src/Exp1/run.sh
 ```
 
 ### Exp2: The function of charge state
 ```bash
-chmod +x /root/PEP2CCS/src/Exp2/run.sh
-bash /root/PEP2CCS/src/Exp2/run.sh
+chmod +x ./src/Exp2/run.sh
+bash ./src/Exp2/run.sh
 ```
 
 ### Exp3: The function of m/z and length
 ```bash
-chmod +x /root/PEP2CCS/src/Exp3/run.sh
-bash /root/PEP2CCS/src/Exp3/run.sh
+chmod +x ./src/Exp3/run.sh
+bash ./src/Exp3/run.sh
 ```
 
 ### Exp4: Application of m/z
 ```bash
-chmod +x /root/PEP2CCS/src/Exp4/run.sh
-bash /root/PEP2CCS/src/Exp4/run.sh
+chmod +x ./src/Exp4/run.sh
+bash ./src/Exp4/run.sh
 ```
 
 ### Exp5: The function of Mix Pooling
 ```bash
-chmod +x /root/PEP2CCS/src/Exp5/run.sh
-bash /root/PEP2CCS/src/Exp5/run.sh
+chmod +x ./src/Exp5/run.sh
+bash ./src/Exp5/run.sh
 ```
 
