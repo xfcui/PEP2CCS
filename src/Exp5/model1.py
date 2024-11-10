@@ -27,10 +27,7 @@ class Mix_Pooling(nn.Module):
         seq = seq.permute(0, 2, 1)
         seq, max_indices = torch.max(seq, dim = 1)
                 
-        if self.training:
-            return cls
-        else:
-            return cls, max_indices
+        return cls
 
 class Embedding(nn.Module):
     def __init__(self, embedding_size, max_len):
@@ -93,9 +90,9 @@ class Regression(nn.Module):
         final_state = torch.cat([seq, length, mz], dim=1)
         return self.mlp(final_state)
 
-class Seq2CCS(nn.Module):
+class PEP2CCS(nn.Module):
     def __init__(self, num_layers, embedding_size, num_heads, dropout, p, max_len=64):
-        super(Seq2CCS, self).__init__()
+        super(PEP2CCS, self).__init__()
         self.max_len = max_len
         self.Embedding = Embedding(embedding_size, max_len)
         self.Encoder = EncoderLayer(num_layers, embedding_size, num_heads, dropout)
@@ -107,11 +104,6 @@ class Seq2CCS(nn.Module):
         seq = self.Embedding(seq)
         seq = self.Encoder(seq, mask)
         
-        if self.training:
-            seq = self.Pooling(seq, mask)
-            out = self.Regression(seq, length, torch.sqrt(mz)) + ccs2
-            return out
-        else:
-            seq, max_indices = self.Pooling(seq, mask)
-            out = self.Regression(seq, length, torch.sqrt(mz)) + ccs2
-            return out, max_indices
+        seq = self.Pooling(seq, mask)
+        out = self.Regression(seq, length, torch.sqrt(mz)) + ccs2
+        return out
