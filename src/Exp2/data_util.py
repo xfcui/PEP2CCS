@@ -99,7 +99,7 @@ def get_data_set():
     return train_dataset, valid_dataset
 
 def get_test_data_set():
-    df = pd.read_csv('/root/PEP2CCS/data/test_data.csv')
+    df = pd.read_csv('./src/data/test_data.csv')
 
     test_data = df
     
@@ -120,17 +120,23 @@ def get_test_data_set():
 
 
 def get_partial_test_data_set():
-    df = pd.read_csv('/root/PEP2CCS/data/test_data.csv')
+    df = pd.read_csv('./src/data/test_data.csv')
 
     sequence_charge_counts = df.groupby('Sequence')['Charge'].nunique()
     multiple_charge_sequences = sequence_charge_counts[sequence_charge_counts > 1].index
 
     test_data = df[df['Sequence'].isin(multiple_charge_sequences)]
     test_seq = process_seq(test_data)
-    test_length = np.array(test_data['Length'])
     test_ccs, test_charge = np.array(test_data['CCS']).reshape(-1, 1), np.array(test_data['Charge']).reshape(-1, 1)
     test_ccs = np.log(test_ccs)
-    test_dataset = polypeptide(test_seq, test_ccs, test_charge, test_length)
+    
+    test_length = np.array(test_data['Length'])
+    test_mz = np.array(test_data['m/z']).reshape(-1, 1)
+    
+    test_ccs2 = predict_ccs(test_mz, test_charge).reshape(-1, 1)
+    test_ccs2 = np.log(test_ccs2).reshape(-1, 1)
+    
+    test_dataset = polypeptide(test_seq, test_ccs, test_charge, test_length, test_mz, test_ccs2)
     print("Data has been processed!!!")
 
     return test_dataset
