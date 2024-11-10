@@ -103,7 +103,7 @@ def get_data_set():
     return train_dataset, valid_dataset
 
 def get_test_data_set():
-    df = pd.read_csv('/root/PEP2CCS/data/test_data.csv')
+    df = pd.read_csv('./src/data/test_data.csv')
     
     test_data = df
     
