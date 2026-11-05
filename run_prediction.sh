@@ -1,23 +1,10 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# Predict CCS for a peptide CSV.
+# Usage: bash run_prediction.sh /path/to/peptides.csv
+set -euo pipefail
+cd "$(dirname "$0")"
+export PYTHONPATH="src${PYTHONPATH:+:$PYTHONPATH}"
 
-if [ -z "$1" ]; then
-  echo "Error: You need to provide a data path!"
-  echo "Usage: ./run_prediction.sh /path/to/test.csv"
-  exit 1
-fi
-
-DATA_PATH=$1
-
-if [ ! -f "$DATA_PATH" ]; then
-  echo "Error: The file '$DATA_PATH' does not exist!"
-  exit 1
-fi
-echo "Using data path '$DATA_PATH' for prediction..."
-
-python ./src/predict/predict.py --data_path "$DATA_PATH"
-
-if [ $? -eq 0 ]; then
-  echo "Prediction completed! Results have been saved."
-else
-  echo "Error: An error occurred during prediction."
-fi
+DATA_PATH="${1:-example}"
+OUTPUT="${2:-results/predict.csv}"
+python scripts/predict.py --data "$DATA_PATH" --output "$OUTPUT"

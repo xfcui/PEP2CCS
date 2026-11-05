@@ -1,0 +1,20 @@
+name: exp3
+description: Where m/z and length enter the network.
+vocab: standard
+physics: default
+length_offset: 0
+composition: false
+plot: false
+runs:
+  - name: mz_in_embedding
+    model: exp3_mz_embed
+    checkpoint: checkpoints/exp3/model1.pt
+    subset: full
+  - name: length_in_embedding
+    model: exp3_length_embed
+    checkpoint: checkpoints/exp3/model2.pt
+    subset: full
+  - name: charge_length_mz_in_embedding
+    model: exp3_joint_embed
+    checkpoint: checkpoints/exp3/model3.pt
+    subset: full

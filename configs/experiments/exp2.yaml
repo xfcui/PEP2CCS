@@ -1,0 +1,32 @@
+name: exp2
+description: Charge-state comparison of PEP2CCS, the Exp2 PEP2CCS checkpoint, and the LSTM baseline.
+vocab: standard
+physics: default
+length_offset: 0
+composition: false
+plot: false
+runs:
+  - name: pep2ccs
+    model: pep2ccs
+    checkpoint: checkpoints/pep2ccs.pt
+    subset: full
+  - name: exp2_pep2ccs
+    model: exp2_pep2ccs
+    checkpoint: checkpoints/exp2/pep2ccs.pt
+    subset: full
+  - name: lstm
+    model: lstm
+    checkpoint: checkpoints/exp2/lstm.pt
+    subset: full
+  - name: pep2ccs
+    model: pep2ccs
+    checkpoint: checkpoints/pep2ccs.pt
+    subset: multi_charge
+  - name: exp2_pep2ccs
+    model: exp2_pep2ccs
+    checkpoint: checkpoints/exp2/pep2ccs.pt
+    subset: multi_charge
+  - name: lstm
+    model: lstm
+    checkpoint: checkpoints/exp2/lstm.pt
+    subset: multi_charge

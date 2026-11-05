@@ -1,0 +1,36 @@
+name: exp5
+description: Mix-pooling ablations. Each run loads the checkpoint trained for that pooling.
+vocab: standard
+physics: default
+length_offset: 0
+composition: false
+plot: false
+runs:
+  - name: cls
+    model: exp5_cls
+    checkpoint: checkpoints/exp5/model1.pt
+    subset: full
+  - name: cls_max
+    model: exp5_cls_max
+    checkpoint: checkpoints/exp5/model2.pt
+    subset: full
+  - name: max
+    model: exp5_max
+    checkpoint: checkpoints/exp5/model3.pt
+    subset: full
+  - name: cnn_max
+    model: exp5_cnn_max
+    checkpoint: checkpoints/exp5/model4.pt
+    subset: full
+  - name: mean
+    model: exp5_mean
+    checkpoint: checkpoints/exp5/model5.pt
+    subset: full
+  - name: mean_max
+    model: exp5_mean_max
+    checkpoint: checkpoints/exp5/model6.pt
+    subset: full
+  - name: mean_cnn
+    model: exp5_mean_cnn
+    checkpoint: checkpoints/exp5/model7.pt
+    subset: full

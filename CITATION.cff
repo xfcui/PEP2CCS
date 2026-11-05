@@ -1,0 +1,21 @@
+cff-version: 1.2.0
+title: PEP2CCS
+message: If you use this software, please cite the accompanying paper.
+type: software
+authors:
+  - family-names: Tian
+    given-names: Zhimeng
+  - family-names: Nie
+    given-names: Zizheng
+  - family-names: Zhang
+    given-names: Yong
+  - family-names: Zhu
+    given-names: Daming
+  - family-names: Cui
+    given-names: Xuefeng
+contact:
+  - email: xfcui@email.sdu.edu.cn
+    family-names: Cui
+    given-names: Xuefeng
+license: MIT
+repository-code: https://github.com/xfcui/PEP2CCS

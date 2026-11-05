@@ -1,0 +1,12 @@
+name: exp4
+description: Composition vector plus m/z. Uses the alphabetical vocabulary, Exp4 baseline, and length + 3.
+vocab: alphabetical
+physics: exp4
+length_offset: 3
+composition: true
+plot: false
+runs:
+  - name: composition
+    model: exp4
+    checkpoint: checkpoints/exp4/model.pt
+    subset: full

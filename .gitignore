@@ -1,0 +1,16 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+results/
+data/examples/*.csv
+char_to_int.json
+predictions_with_errors*.csv
+predict_data.csv
+PEP2CCS/
+checkpoints/**/*.pt
+.ipynb_checkpoints/
+*.egg-info/
+.eggs/
+dist/
+build/

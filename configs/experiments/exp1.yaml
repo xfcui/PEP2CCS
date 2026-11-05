@@ -1,0 +1,12 @@
+name: exp1
+description: Held-out performance of the published PEP2CCS checkpoint.
+vocab: standard
+physics: default
+length_offset: 0
+composition: false
+plot: true
+runs:
+  - name: pep2ccs
+    model: pep2ccs
+    checkpoint: checkpoints/pep2ccs.pt
+    subset: full

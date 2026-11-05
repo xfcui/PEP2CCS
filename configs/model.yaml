@@ -1,0 +1,13 @@
+embedding_size: 128
+num_layers: 6
+num_heads: 8
+dropout: 0.2
+max_len: 64
+batch_size: 512
+learning_rate: 0.001
+epochs: 300
+reduce_lr_step: 200
+eval_interval: 10
+early_stop: 15
+split_seed: 1115
+valid_fraction: 0.01
