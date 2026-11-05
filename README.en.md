@@ -2,88 +2,76 @@
 
 # PEP2CCS
 
-PEP2CCS predicts peptide collision cross section (CCS) from sequence, charge, length, and m/z. The network learns a residual on top of the log of the physical baseline `a * charge * sqrt(m/z) + b`.
+[![Paper](https://img.shields.io/badge/BIBM%202024-IEEE-004088)](https://ieeexplore.ieee.org/abstract/document/10822507)
+[![DOI](https://img.shields.io/badge/DOI-10.1109%2FBIBM62325.2024.10822507-blue)](https://doi.org/10.1109/BIBM62325.2024.10822507)
+[![Python](https://img.shields.io/badge/python-3.9-3776AB)](https://www.python.org/)
+[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
-**Paper:** [How to Integrate Non-Sequence Features for Peptide Collision Cross Section Prediction with Deep Learning?](https://ieeexplore.ieee.org/abstract/document/10822507)  
-IEEE International Conference on Bioinformatics and Biomedicine (BIBM), 2024. DOI: [10.1109/BIBM62325.2024.10822507](https://doi.org/10.1109/BIBM62325.2024.10822507)
+PEP2CCS predicts peptide collision cross section (CCS) from sequence, charge, length, and m/z. A 6-layer Transformer (embedding size 128, 8 heads) learns a log residual on a charge-specific physical baseline:
 
-Authors: Zhimeng Tian, Zizheng Nie, Yong Zhang, Daming Zhu, Xuefeng Cui  
-Contact: xfcui@email.sdu.edu.cn
+```text
+CCS = exp( f(sequence, charge, length, m/z) + log(a * charge * sqrt(m/z) + b) )
+```
 
-## Setup
+Charge is a special token. It is concatenated with a CNN max pool and passed to the regression head together with length and sqrt(m/z).
 
-Conda and Python 3.9 are required. Package versions are pinned in `requirements.txt` and `environment.yml`.
+[How to Integrate Non-Sequence Features for Peptide Collision Cross Section Prediction with Deep Learning?](https://ieeexplore.ieee.org/abstract/document/10822507), IEEE BIBM 2024. DOI: [10.1109/BIBM62325.2024.10822507](https://doi.org/10.1109/BIBM62325.2024.10822507).  
+Zhimeng Tian, Zizheng Nie, Yong Zhang, Daming Zhu, Xuefeng Cui · xfcui@email.sdu.edu.cn
+
+## Installation
+
+Conda and Python 3.9 are required. Dependencies are pinned in `environment.yml`, including PyTorch 2.2.2.
 
 ```bash
 bash run_setup.sh
 conda activate PEP2CCS
 ```
 
-## Data
-
-The example table is `data/examples/test_data.zip`. The first prediction or experiment run extracts it to `data/examples/test_data.csv`.
-
-Prediction requires `Sequence`, `Charge`, and `m/z`. `Length` is optional and falls back to the sequence length. Evaluation and training also require `CCS`. Supported charges are 2, 3, and 4. Sequences use the 20 standard amino acids and, with the start, charge, and end tokens, must fit in 64 positions.
-
-Column definitions, the two vocabularies, and the physical coefficients are in the [data schema](docs/data_schema.en.md). Notes on the example table and the weights are in [data/README.en.md](data/README.en.md) and [checkpoints/README.en.md](checkpoints/README.en.md).
-
 ## Prediction
 
 ```bash
 bash run_prediction.sh data/examples/test_data.csv
-```
-
-If you omit the path, the script uses the example table. Results are written to `results/predict.csv`. When the table contains `CCS`, the terminal prints MSE and the median absolute relative deviation. Relative deviation is `(CCS / Pred CCS) * 100 - 100`.
-
-```bash
 python scripts/predict.py --data /path/to/peptides.csv --output results/mine.csv --device auto
 ```
 
-The device is `cuda` (the default visible GPU) or CPU.
+Results go to `results/predict.csv`. When `CCS` is present, the terminal reports MSE and the median absolute relative deviation, `(CCS / Pred CCS) * 100 - 100`. Input needs `Sequence`, `Charge`, and `m/z`. Charges are 2, 3, or 4; sequences use the standard amino acids and fit in 64 positions. See the [data schema](docs/data_schema.en.md).
 
 ## Reproducing the experiments
 
 ```bash
-python scripts/run_experiment.py exp1
-python scripts/run_experiment.py exp2
-python scripts/run_experiment.py exp3
-python scripts/run_experiment.py exp4
-python scripts/run_experiment.py exp5
+python scripts/run_experiment.py exp1   # exp2 … exp5
 ```
 
-Model, checkpoint, and data settings for each experiment are in `configs/experiments/`. Metrics are written to `results/<experiment>/metrics.csv`. Check the pipeline on the first 128 rows:
+Metrics are written to `results/<experiment>/metrics.csv`. Paper numbers use the full example table. `--limit 128 --device cpu` only checks that a run starts.
 
-```bash
-python scripts/run_experiment.py exp1 --limit 128 --device cpu
-```
+| Experiment | Comparison |
+| --- | --- |
+| Exp1 | Primary model |
+| Exp2 | Primary model, a second Transformer checkpoint, and a 3-layer bidirectional LSTM |
+| Exp3 | Injecting m/z or length into the charge token |
+| Exp4 | Amino-acid composition, an alphabetical vocabulary, and a second set of physical coefficients |
+| Exp5 | Seven pooling operators |
 
-`--limit` only checks that the run starts. Numbers in the paper come from the full example table. The Exp1 figure annotates the median absolute relative deviation computed from that run.
-
-The mapping from experiments to checkpoints is in the [experiment notes](docs/experiments.en.md).
+Details are in the [experiment notes](docs/experiments.en.md), [data/README.en.md](data/README.en.md), and [checkpoints/README.en.md](checkpoints/README.en.md).
 
 ## Training
 
-`scripts/train.py` rebuilds a training loop from `configs/model.yaml`: Adam, a 10× learning-rate drop at epoch 200, a 1% validation split, split seed 1115, MSE in log CCS, and a stop after 15 epochs without a validation improvement. A newly trained file can be used for prediction. `checkpoints/pep2ccs.pt` remains the checkpoint released with the paper.
+Released weights are packed in `checkpoints/archives/` and extracted on first use. `scripts/train.py` follows `configs/model.yaml`: Adam, learning rate ×0.1 at epoch 200, a 1% validation split with seed 1115, MSE on log CCS, and a stop after 15 epochs without improvement.
 
 ```bash
 python scripts/train.py --train-csv /path/to/train.csv --output checkpoints/rerun.pt
 ```
 
-The training CSV uses the same columns as the example table and must include `CCS`. The released checkpoints are ready for prediction and for the experiments above. The `.pt` files are packed in zip archives under `checkpoints/archives/` and are extracted into `checkpoints/` the first time they are used.
-
 ## Layout
 
 ```text
-configs/          hyperparameters, physical coefficients, five experiments
-data/examples/    example test table
-checkpoints/      released weights
-src/pep2ccs/      data, model, training, and evaluation
-scripts/          predict, train, and reproduce experiments
-tests/            encoding, forward shapes, and checkpoint compatibility
-docs/             data schema and experiment notes. English pages use the .en.md suffix
+configs/        hyperparameters, physical coefficients, experiment configs
+data/examples/  example test table
+checkpoints/    released weights
+src/pep2ccs/    data, model, training, evaluation
+scripts/        predict, train, run experiments
+docs/           data schema and experiment notes
 ```
-
-## Tests
 
 ```bash
 PYTHONPATH=src python -m unittest discover -s tests -v
@@ -101,3 +89,5 @@ PYTHONPATH=src python -m unittest discover -s tests -v
   url       = {https://ieeexplore.ieee.org/abstract/document/10822507}
 }
 ```
+
+[MIT License](LICENSE)
