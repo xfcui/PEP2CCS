@@ -7,13 +7,6 @@
 [![Python](https://img.shields.io/badge/python-3.9-3776AB)](https://www.python.org/)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
-PEP2CCS 由肽段序列、电荷、长度和 m/z 预测碰撞截面（CCS）。6 层 Transformer（嵌入维度 128，8 个注意力头）在按电荷拟合的物理基线上学习对数残差：
-
-```text
-CCS = exp( f(sequence, charge, length, m/z) + log(a · charge · sqrt(m/z) + b) )
-```
-
-电荷写成特殊 token，与 CNN max pooling 拼接后，连同长度和 sqrt(m/z) 进入回归头。
 
 [How to Integrate Non-Sequence Features for Peptide Collision Cross Section Prediction with Deep Learning?](https://ieeexplore.ieee.org/abstract/document/10822507), IEEE BIBM 2024. DOI: [10.1109/BIBM62325.2024.10822507](https://doi.org/10.1109/BIBM62325.2024.10822507).  
 Zhimeng Tian, Zizheng Nie, Yong Zhang, Daming Zhu, Xuefeng Cui · xfcui@email.sdu.edu.cn
