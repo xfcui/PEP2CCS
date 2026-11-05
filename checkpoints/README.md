@@ -1,18 +1,18 @@
-<p align="right"><a href="../README.md">README</a> · <b>中文</b> | <a href="README.en.md">English</a></p>
+<p align="right"><a href="../README.zh.md">README</a> · <b>中文</b> | <a href="README.en.md">English</a></p>
 
 # 权重
 
-仓库里提交的是 `archives/` 下的 zip，避免单个权重目录过大。`.pt` 本身已经是压缩包，再打包大约还能小一成，并且每个 zip 都低于 GitHub 的单文件限制。第一次加载时，程序按下面的相对路径把需要的文件解压到本目录。这些是 pickle，只加载你信任的文件。预测使用其中的 `model_param`。
+权重附在 [Release v1.0.0](https://github.com/xfcui/PEP2CCS/releases/tag/v1.0.0)。第一次加载时，程序下载包含目标文件的压缩包，并解压到本目录。这些是 pickle，只加载你信任的文件。预测使用其中的 `model_param`。
 
-| 压缩包 | 内容 |
+| Release 附件 | 内容 |
 |---|---|
-| archives/pep2ccs.zip | pep2ccs.pt |
-| archives/exp2.zip | exp2/pep2ccs.pt、exp2/lstm.pt |
-| archives/exp3.zip | exp3/model1.pt … model3.pt |
-| archives/exp4.zip | exp4/model.pt |
-| archives/exp5-part1.zip | exp5/model1.pt … model3.pt |
-| archives/exp5-part2.zip | exp5/model4.pt … model6.pt |
-| archives/exp5-part3.zip | exp5/model7.pt |
+| pep2ccs.zip | pep2ccs.pt |
+| exp2.zip | exp2/pep2ccs.pt、exp2/lstm.pt |
+| exp3.zip | exp3/model1.pt … model3.pt |
+| exp4.zip | exp4/model.pt |
+| exp5-part1.zip | exp5/model1.pt … model3.pt |
+| exp5-part2.zip | exp5/model4.pt … model6.pt |
+| exp5-part3.zip | exp5/model7.pt |
 
 | 解压后的文件 | 结构 |
 |---|---|

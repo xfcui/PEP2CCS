@@ -1,5 +1,7 @@
 """Load published weights and hyper-parameters."""
 
+import os
+import urllib.request
 import zipfile
 from pathlib import Path
 from typing import Dict
@@ -9,17 +11,19 @@ import yaml
 
 from pep2ccs.paths import CHECKPOINT_DIR, CONFIG_DIR, ROOT
 
-# Released weights are stored compressed. Each archive stays under GitHub's
-# file-size limit. Members use paths relative to checkpoints/, such as exp2/lstm.pt.
-ARCHIVES = (
-    CHECKPOINT_DIR / "archives" / "pep2ccs.zip",
-    CHECKPOINT_DIR / "archives" / "exp2.zip",
-    CHECKPOINT_DIR / "archives" / "exp3.zip",
-    CHECKPOINT_DIR / "archives" / "exp4.zip",
-    CHECKPOINT_DIR / "archives" / "exp5-part1.zip",
-    CHECKPOINT_DIR / "archives" / "exp5-part2.zip",
-    CHECKPOINT_DIR / "archives" / "exp5-part3.zip",
-)
+# Released weights are release assets, not files in the git tree.
+# Members use paths relative to checkpoints/, such as exp2/lstm.pt.
+RELEASE_TAG = "v1.0.0"
+RELEASE_URL = "https://github.com/xfcui/PEP2CCS/releases/download/{0}".format(RELEASE_TAG)
+ARCHIVE_MEMBERS = {
+    "pep2ccs.zip": ("pep2ccs.pt",),
+    "exp2.zip": ("exp2/lstm.pt", "exp2/pep2ccs.pt"),
+    "exp3.zip": ("exp3/model1.pt", "exp3/model2.pt", "exp3/model3.pt"),
+    "exp4.zip": ("exp4/model.pt",),
+    "exp5-part1.zip": ("exp5/model1.pt", "exp5/model2.pt", "exp5/model3.pt"),
+    "exp5-part2.zip": ("exp5/model4.pt", "exp5/model5.pt", "exp5/model6.pt"),
+    "exp5-part3.zip": ("exp5/model7.pt",),
+}
 
 DEFAULT_HPARAMS: Dict[str, float] = {
     "embedding_size": 128,
@@ -59,8 +63,35 @@ def load_experiment(name: str) -> Dict:
     return config
 
 
+def _archive_for(member: str) -> Path:
+    for name, members in ARCHIVE_MEMBERS.items():
+        if member in members:
+            return CHECKPOINT_DIR / "archives" / name
+    raise FileNotFoundError(
+        "checkpoint {0} is not part of release {1}".format(member, RELEASE_TAG)
+    )
+
+
+def _download(url: str, destination: Path) -> None:
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    temporary = destination.with_suffix(destination.suffix + ".part")
+    request = urllib.request.Request(url, headers={"User-Agent": "pep2ccs"})
+    try:
+        with urllib.request.urlopen(request) as response, open(temporary, "wb") as handle:
+            while True:
+                chunk = response.read(1024 * 1024)
+                if not chunk:
+                    break
+                handle.write(chunk)
+        os.replace(str(temporary), str(destination))
+    except Exception:
+        if temporary.exists():
+            temporary.unlink()
+        raise
+
+
 def ensure_checkpoint(path: str) -> str:
-    """Return a local .pt path, extracting it from checkpoints/archives when needed."""
+    """Return a local .pt path, downloading its release archive when needed."""
     target = Path(path)
     if not target.is_absolute():
         target = (ROOT / target).resolve()
@@ -72,17 +103,22 @@ def ensure_checkpoint(path: str) -> str:
         raise FileNotFoundError(target) from exc
     if ".." in member.split("/"):
         raise FileNotFoundError(target)
-    for archive in ARCHIVES:
-        if not archive.exists():
-            continue
-        with zipfile.ZipFile(archive) as bundle:
-            if member not in bundle.namelist():
-                continue
-            bundle.extract(member, path=str(CHECKPOINT_DIR))
-            return str(target)
-    raise FileNotFoundError(
-        "checkpoint {0} is not on disk and not in checkpoints/archives".format(member)
-    )
+    archive = _archive_for(member)
+    if not archive.exists():
+        url = "{0}/{1}".format(RELEASE_URL, archive.name)
+        try:
+            _download(url, archive)
+        except Exception as exc:
+            raise FileNotFoundError(
+                "could not download {0} from {1}".format(archive.name, url)
+            ) from exc
+    with zipfile.ZipFile(archive) as bundle:
+        if member not in bundle.namelist():
+            raise FileNotFoundError(
+                "checkpoint {0} is not in {1}".format(member, archive.name)
+            )
+        bundle.extract(member, path=str(CHECKPOINT_DIR))
+    return str(target)
 
 
 def load_weights(model: torch.nn.Module, path: str, device: torch.device) -> None:

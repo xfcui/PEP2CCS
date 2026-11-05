@@ -9,6 +9,7 @@ predictions_with_errors*.csv
 predict_data.csv
 PEP2CCS/
 checkpoints/**/*.pt
+checkpoints/archives/
 .ipynb_checkpoints/
 *.egg-info/
 .eggs/

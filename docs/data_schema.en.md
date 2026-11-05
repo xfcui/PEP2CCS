@@ -1,4 +1,4 @@
-<p align="right"><a href="../README.en.md">README</a> · <a href="data_schema.md">中文</a> | <b>English</b></p>
+<p align="right"><a href="../README.md">README</a> · <a href="data_schema.md">中文</a> | <b>English</b></p>
 
 # Data schema
 

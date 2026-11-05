@@ -1,4 +1,4 @@
-<p align="right"><a href="../README.md">README</a> · <b>中文</b> | <a href="data_schema.en.md">English</a></p>
+<p align="right"><a href="../README.zh.md">README</a> · <b>中文</b> | <a href="data_schema.en.md">English</a></p>
 
 # 数据约定
 

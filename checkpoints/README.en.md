@@ -1,18 +1,18 @@
-<p align="right"><a href="../README.en.md">README</a> · <a href="README.md">中文</a> | <b>English</b></p>
+<p align="right"><a href="../README.md">README</a> · <a href="README.md">中文</a> | <b>English</b></p>
 
 # Checkpoints
 
-The repository stores zip archives in `archives/` so the weight directory is not committed as loose files. A `.pt` file is already a zip; packing them again saves a little more, and each archive stays within GitHub's per-file limit. The first load extracts the member listed below into this directory. The files are pickles; load only files you trust. Prediction reads `model_param`.
+The weights are attached to [release v1.0.0](https://github.com/xfcui/PEP2CCS/releases/tag/v1.0.0). The first load downloads the archive that contains the requested file and extracts it into this directory. The files are pickles; load only files you trust. Prediction reads `model_param`.
 
-| Archive | Contents |
+| Release asset | Contents |
 |---|---|
-| archives/pep2ccs.zip | pep2ccs.pt |
-| archives/exp2.zip | exp2/pep2ccs.pt, exp2/lstm.pt |
-| archives/exp3.zip | exp3/model1.pt … model3.pt |
-| archives/exp4.zip | exp4/model.pt |
-| archives/exp5-part1.zip | exp5/model1.pt … model3.pt |
-| archives/exp5-part2.zip | exp5/model4.pt … model6.pt |
-| archives/exp5-part3.zip | exp5/model7.pt |
+| pep2ccs.zip | pep2ccs.pt |
+| exp2.zip | exp2/pep2ccs.pt, exp2/lstm.pt |
+| exp3.zip | exp3/model1.pt … model3.pt |
+| exp4.zip | exp4/model.pt |
+| exp5-part1.zip | exp5/model1.pt … model3.pt |
+| exp5-part2.zip | exp5/model4.pt … model6.pt |
+| exp5-part3.zip | exp5/model7.pt |
 
 | Extracted file | Architecture |
 |---|---|
